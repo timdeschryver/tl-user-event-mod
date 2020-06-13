@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "lib": ["dom", "es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitHelpers": false,
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "es5",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["./src/**/*.ts"]
+}

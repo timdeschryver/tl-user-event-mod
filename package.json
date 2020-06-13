@@ -1,0 +1,29 @@
+{
+  "name": "tl-user-event-mod",
+  "version": "0.0.0",
+  "description": "Moves @testing-library/user-event to build-in @testing-library/dom",
+  "bin": "cli.js",
+  "scripts": {
+    "sandbox": "ts-node ./src/index.ts",
+    "test": "jest",
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "postbuild": "cpy ./package.json ./dist && cpy ./cli.js ./dist && cpy ./README.md ./dist"
+  },
+  "keywords": [],
+  "author": "Tim Deschryver",
+  "license": "MIT",
+  "dependencies": {
+    "ts-morph": "^7.1.0",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.13",
+    "cpy-cli": "^3.1.1",
+    "jest": "^26.0.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.3"
+  }
+}
