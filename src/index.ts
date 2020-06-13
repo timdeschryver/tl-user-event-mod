@@ -1,4 +1,7 @@
 import { Project, ScriptTarget, SourceFile, Node, ts } from 'ts-morph';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { cwd } from 'process';
+import { normalize } from 'path';
 
 const glob = process.argv.slice(2)[0] || './**/*{.ts,.js}';
 const project = new Project({
@@ -8,15 +11,43 @@ const project = new Project({
     target: ScriptTarget.Latest,
   },
 });
-
 project.addSourceFilesAtPaths([glob, '!./node_modules/**']);
+
+if (existsSync('./package.json')) {
+  const pgk = JSON.parse(readFileSync('./package.json', 'utf-8'));
+  let overwritePkg = false;
+
+  if (pgk.dependencies && pgk.dependencies['@testing-library/user-event']) {
+    delete pgk.dependencies['@testing-library/user-event'];
+    overwritePkg = true;
+  }
+
+  if (
+    pgk.devDependencies &&
+    pgk.devDependencies['@testing-library/user-event']
+  ) {
+    delete pgk.devDependencies['@testing-library/user-event'];
+    overwritePkg = true;
+  }
+
+  if (overwritePkg) {
+    console.log('./package.json');
+    writeFileSync('./package.json', JSON.stringify(pgk, null, 2), {
+      encoding: 'utf-8',
+    });
+  }
+}
 
 const sourceFiles = project.getSourceFiles();
 for (const sourceFile of sourceFiles) {
   const [shouldUpdate, userEvent] = updateImports(sourceFile);
 
   if (shouldUpdate) {
-    console.log(sourceFile.getFilePath());
+    console.log(
+      normalize(sourceFile.getFilePath())
+        .replace(normalize(cwd()), '')
+        .substr(1)
+    );
     updateAwaitable(sourceFile, userEvent);
     updateTypeToPaste(sourceFile, userEvent);
     sourceFile.saveSync();
